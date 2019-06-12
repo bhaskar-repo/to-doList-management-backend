@@ -2,7 +2,7 @@
  * This is the configuration file for entire application
  */
 let appConfig = {
-    port: 3001,
+    port: 3000,
     env: 'prod',
     corsAllowedOrigin: '*',
     apiVersion: '/api/v1',
