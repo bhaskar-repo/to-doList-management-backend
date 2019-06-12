@@ -307,7 +307,7 @@ let sendEmail = (req, res) => {
             console.log(process.env.EMAIL)
             console.log(process.env);
             var transporter = nodeMailer.createTransport({
-                service: 'SendPulse',
+                service: 'gmail',
                 auth: {
                        user: `${process.env.EMAIL}`,
                        pass: `${process.env.PASSWORD}`
