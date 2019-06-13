@@ -29,7 +29,7 @@ const setRouter = (app) => {
      * @apiParam {string} countryPhoneCode of the user (body param) (required)
      * @apiSuccess {object} myResponse shows error status, message, http status code, result.
      * 
-     * @apiSuccessExample {object} Success-Response:
+     * @apiSuccessExample {json} Success-Response:
         {
             "error": false,
             "message": "Signed up successfully !",
@@ -44,6 +44,13 @@ const setRouter = (app) => {
                 "email": "bhaskar@example.com",
                 "createdOn": "2019-05-29T17:16:41.000Z"
             }
+        }
+        @apiErrorExample {json} Error-Response:
+        {
+             "error": true,
+             "message": "Route not found in the application || Internal serever error",
+             "status": "500 || 404",
+             "data" : "null"
         }
     */
     app.post(`${baseUrl}/signup`, userController.signUp);
@@ -72,6 +79,13 @@ const setRouter = (app) => {
                     "email": "bhaskar@example.com"
                 }
             }
+        }
+          @apiErrorExample {json} Error-Response:
+        {
+             "error": true,
+             "message": "Route not found in the application || Internal serever error",
+             "status": "500 || 404",
+             "data" : "null"
         }
     */
     app.post(`${baseUrl}/login`, userController.login);
@@ -107,39 +121,368 @@ const setRouter = (app) => {
                 "messageId": "<0114b13d-0f87-af2c-cc5c-32aabe6bf476@gmail.com>"
             }
         }
+        @apiErrorExample {json} Error-Response:
+        {
+             "error": true,
+             "message": "Route not found in the application || Internal serever error",
+             "status": "500 || 404",
+             "data" : "null"
+        }
     */
     app.post(`${baseUrl}/sendemail`, userController.sendEmail);
 
-     /**
+    /**
+    * @apiGroup users
+    * @apiVersion  1.0.0
+    * @api {post} /api/v1/users/reset api for user to send email for reset password.
+    * @apiParam {string} email email of the user. (body params) (required)
+    * @apiParam {string} password new password of the user. (body params) (required)
+    * @apiSuccess {object} myResponse shows error status, message, http status code, result.
+    * @apiSuccessExample {object} Success-Response:
+    *  {
+           "error": false,
+           "message": "password reset successful !",
+           "status": 200,
+           "data": {
+               "userId": "JKSgbe9-f",
+               "email": "bhaskar26.pawar@gmail.com"
+           }
+       }
+        @apiErrorExample {json} Error-Response:
+        {
+             "error": true,
+             "message": "Route not found in the application || Internal serever error",
+             "status": "500 || 404",
+             "data" : "null"
+        }
+   */
+    app.post(`${baseUrl}/reset`, resetPassController.resetPassword);
+
+    /**
+  * @apiGroup users
+  * @apiVersion  1.0.0
+  * @api {post} /api/v1/users/logout api for user to log out of the application.
+  * @apiParam {string} userId of the user. (body params) (required)
+  * @apiSuccess {object} myResponse shows error status, message, http status code, result.
+  * @apiSuccessExample {object} Success-Response:
+  * {
+        "error": false,
+        "message": "Logged Out Successfully",
+        "status": 200,
+        "data": null
+    }
+      @apiErrorExample {json} Error-Response:
+        {
+             "error": true,
+             "message": "Route not found in the application || Internal serever error",
+             "status": "500 || 404",
+             "data" : "null"
+        }
+ */
+    app.post(`${baseUrl}/logout`, userController.logout);
+    /**
+    * @apiGroup users
+    * @apiVersion  1.0.0
+    * @api {get} /api/v1/users/:userId/notfriends api for user to find friends in the system.
+    * @apiParam {string} userId of the user. (request params) (required)
+    * @apiParam {string} authToken of the user (query param)(required)
+    * @apiSuccess {object} myResponse shows error status, message, http status code, result.
+    * @apiSuccessExample {object} Success-Response:
+    * {
+          "error": false,
+          "message": "users fetched",
+          "status": 200,
+          "data": [
+              {
+                  "userId": "Vtj4t4Xy5",
+                  "fullName": "bhasu pawar",
+                  "mobileNumber": 4564564564,
+                  "countryName": "Wallis and Futuna",
+                  "email": "bhasu@123.com",
+                  "friends": [
+                      {
+                          "userId": "sXYShmutU",
+                          "userName": "avi pawar",
+                          "countryName": "Bermuda",
+                          "createdOn": "2019-06-13T03:23:20.000Z"
+                      }
+                  ],
+                  "requests": []
+              }
+          ]
+      }
+        @apiErrorExample {json} Error-Response:
+          {
+               "error": true,
+               "message": "Route not found in the application || Internal serever error",
+               "status": "500 || 404",
+               "data" : "null"
+          }
+   */
+    app.get(`${baseUrl}/:userId/notfriends`, authMiddleware.isAuthorized, headerController.getUsersWithoutFriends);
+    /**
      * @apiGroup users
      * @apiVersion  1.0.0
-     * @api {post} /api/v1/users/reset api for user to send email for reset password.
-     * @apiParam {string} email email of the user. (body params) (required)
-     * @apiParam {string} password new password of the user. (body params) (required)
+     * @api {get} /api/v1/users/:userId/profile api for user to get profile.
+     * @apiParam {string} userId of the user. (request params) (required)
+     * @apiParam {string} authToken of the user (query param)(required)
      * @apiSuccess {object} myResponse shows error status, message, http status code, result.
      * @apiSuccessExample {object} Success-Response:
-     *  {
+     * {
+           "error": false,
+           "message": "user fetched",
+           "status": 200,
+           "data": {
+               "userId": "sXYShmutU",
+               "fullName": "avi pawar",
+               "mobileNumber": 3456345656,
+               "countryName": "Bermuda",
+               "countryPhoneCode": "+1-441",
+               "email": "avi@123.com"
+           }
+       }
+         @apiErrorExample {json} Error-Response:
+           {
+                "error": true,
+                "message": "Route not found in the application || Internal serever error",
+                "status": "500 || 404",
+                "data" : "null"
+           }
+    */
+    app.get(`${baseUrl}/:userId/profile`, authMiddleware.isAuthorized, headerController.getSingUser);
+    /**
+  * @apiGroup users
+  * @apiVersion  1.0.0
+  * @api {post} /api/v1/users/:userId/sendrequest api for user to send request to another user.
+  * @apiParam {string} userId of the user whom you sent the request. (request param) (required)
+  * @apiParam {string} userId of the user who sent the request (body param) (required)
+  * @apiParam {string} countryName country of the user who sent the request (body param)(required)
+  * @apiParam {string} userName of the user who sent the request (body param)(rquired)
+  * @apiParam {string} authToken of the user (query param)(required)
+  * @apiSuccess {object} myResponse shows error status, message, http status code, result.
+  * @apiSuccessExample {object} Success-Response:
+  * {
+        "error": false,
+        "message": "request has been sent successfully",
+        "status": 200,
+        "data": {
+            "userId": "Vtj4t4Xy5",
+            "userName": "bhaskar pawar",
+            "countryName": "India",
+            "createdOn": "2019-06-13T13:58:10Z"
+        }
+    }
+      @apiErrorExample {json} Error-Response:
+        {
+             "error": true,
+             "message": "Route not found in the application || Internal serever error",
+             "status": "500 || 404",
+             "data" : "null"
+        }
+ */
+    app.post(`${baseUrl}/:userId/sendrequest`, authMiddleware.isAuthorized, headerController.updateSentRequest);
+    /**
+      * @apiGroup users
+      * @apiVersion  1.0.0
+      * @api {get} /api/v1/users/:userId/requests api for user to get requests.
+      * @apiParam {string} userId of the user. (request params) (required)
+      * @apiParam {string} authToken of the user (query param)(required)
+      * @apiSuccess {object} myResponse shows error status, message, http status code, result.
+      * @apiSuccessExample {object} Success-Response:
+      * {
             "error": false,
-            "message": "password reset successful !",
+            "message": "requests fetched",
+            "status": 200,
+            "data": [
+                {
+                    "userId": "Vtj4t4Xy5",
+                    "userName": "bhaskar pawar",
+                    "countryName": "India",
+                    "createdOn": "2019-06-13T13:58:10.000Z"
+                }
+            ]
+        }
+          @apiErrorExample {json} Error-Response:
+            {
+                 "error": true,
+                 "message": "Route not found in the application || Internal serever error",
+                 "status": "500 || 404",
+                 "data" : "null"
+            }
+     */
+    app.get(`${baseUrl}/:userId/requests`, authMiddleware.isAuthorized, headerController.getUserRequests);
+    /**
+      * @apiGroup users
+      * @apiVersion  1.0.0
+      * @api {get} /api/v1/users/:userId/friends api for user to get friends.
+      * @apiParam {string} userId of the user. (request params) (required)
+      * @apiParam {string} authToken of the user (query param)(required)
+      * @apiSuccess {object} myResponse shows error status, message, http status code, result.
+      * @apiSuccessExample {object} Success-Response:
+        * {
+            "error": false,
+            "message": "friends fetched",
+            "status": 200,
+            "data": [
+                {
+                    "userId": "Vtj4t4Xy5",
+                    "userName": "bhasu pawar",
+                    "countryName": "Wallis and Futuna",
+                    "createdOn": "2019-06-13T03:23:20.000Z"
+                }
+            ]
+        }
+          @apiErrorExample {json} Error-Response:
+            {
+                 "error": true,
+                 "message": "Route not found in the application || Internal serever error",
+                 "status": "500 || 404",
+                 "data" : "null"
+            }
+     */
+    app.get(`${baseUrl}/:userId/friends`, authMiddleware.isAuthorized, headerController.getUserFriends);
+    /**
+    * @apiGroup users
+    * @apiVersion  1.0.0
+    * @api {post} /api/v1/users/:userId/requests/delete api for user to cancel request of the user.
+    * @apiParam {string} userId of the user. (request params) (required)
+    * @apiParam {string} authToken of the user (query param)(required)
+    * @apiSuccess {object} myResponse shows error status, message, http status code, result.
+    * @apiSuccessExample {object} Success-Response:
+    * {
+      "error": false,
+      "message": "request cancelled successfully",
+      "status": 200,
+      "data": {
+          "requests": []
+      }
+  }
+   */
+    app.post(`${baseUrl}/:userId/requests/delete`, authMiddleware.isAuthorized, requestsController.cancelUserRequest);
+    /**
+      * @apiGroup users
+      * @apiVersion  1.0.0
+      * @api {post} /api/v1/users/requests/accept api for user to accept request of the user.
+      * @apiParam {string} senderId of the sender. (body params) (required)
+      * @apiParam {string} senderName of the sender. (body params) (required)
+      * @apiParam {string} senderCountry of the sender. (body params) (required)
+      * @apiParam {string} receiverId of the sender. (body params) (required)
+      * @apiParam {string} receiverName of the sender. (body params) (required)
+      * @apiParam {string} receiverCountry of the sender. (body params) (required)
+      * @apiParam {string} authToken of the user (query param)(required)
+      * @apiSuccess {object} myResponse shows error status, message, http status code, result.
+      * @apiSuccessExample {object} Success-Response:
+      *{
+            "error": false,
+            "message": "request has been accepted",
             "status": 200,
             "data": {
-                "userId": "JKSgbe9-f",
-                "email": "bhaskar26.pawar@gmail.com"
+                "sender": {
+                    "userId": "Vtj4t4Xy5",
+                    "userName": "bhasu Pawar",
+                    "countryName": "India",
+                    "createdOn": "2019-06-13T14:23:05Z"
+                },
+                "receiver": {
+                    "userId": "sXYShmutU",
+                    "userName": "avi pawar",
+                    "countryName": "India",
+                    "createdOn": "2019-06-13T14:23:05Z"
+                }
             }
         }
-    */
-    app.post(`${baseUrl}/logout`, userController.logout);
-    app.post(`${baseUrl}/reset`, resetPassController.resetPassword);
-    app.get(`${baseUrl}/:userId/notfriends`, authMiddleware.isAuthorized, headerController.getUsersWithoutFriends);
-    app.get(`${baseUrl}/:userId/profile`, authMiddleware.isAuthorized, headerController.getSingUser);
-    app.post(`${baseUrl}/:userId/sendrequest`, authMiddleware.isAuthorized, headerController.updateSentRequest);
-    app.get(`${baseUrl}/:userId/requests`, authMiddleware.isAuthorized, headerController.getUserRequests);
-    app.get(`${baseUrl}/:userId/friends`, authMiddleware.isAuthorized, headerController.getUserFriends);
-    app.post(`${baseUrl}/:userId/requests/delete`, authMiddleware.isAuthorized, requestsController.cancelUserRequest);
+          @apiErrorExample {json} Error-Response:
+            {
+                 "error": true,
+                 "message": "Route not found in the application || Internal serever error",
+                 "status": "500 || 404",
+                 "data" : "null"
+            }
+     */
     app.post(`${baseUrl}/requests/accept`, authMiddleware.isAuthorized, requestsController.acceptFriendRequest);
+    /**
+      * @apiGroup users
+      * @apiVersion  1.0.0
+      * @api {get} /api/v1/users/:userId/activities api for user to get activities.
+      * @apiParam {string} userId of the user. (request params) (required)
+      * @apiParam {string} authToken of the user (query param)(required)
+      * @apiSuccess {object} myResponse shows error status, message, http status code, result.
+      * @apiSuccessExample {object} Success-Response:
+      * {
+        "error": false,
+        "message": "activities fetched",
+        "status": 200,
+        "data": [
+            {
+                "activityId": "JjOb6ZA9W",
+                "userId": "sXYShmutU",
+                "userName": "avi pawar",
+                "message": "has created new list <b>wewe</b>",
+                "activityType": "createlist",
+                "undoActivity": "deletelist",
+                "listData": {
+                    "title": "wewe",
+                    "id": "j2xLOYKJF",
+                    "owner": "sXYShmutU",
+                    "createdOn": "2019-06-13T03:26:27.000Z",
+                    "itemsList": [],
+                },
+                "itemData": null,
+                "subItemData": null,
+                "updatedOn": "2019-06-13T03:26:28.000Z",
+            }
+        }
+          @apiErrorExample {json} Error-Response:
+            {
+                 "error": true,
+                 "message": "Route not found in the application || Internal serever error",
+                 "status": "500 || 404",
+                 "data" : "null"
+            }
+     */
     app.get(`${baseUrl}/:userId/activities`, authMiddleware.isAuthorized, activityController.getActivities);
+    /**
+      * @apiGroup users
+      * @apiVersion  1.0.0
+      * @api {post} /api/v1/users/:userId/activities/:activityId/delete api for user to delete activity.
+      * @apiParam {string} userId of the user. (request params) (required)
+      * @apiParam {string} activityId of the user. (request params) (required)
+      * @apiParam {string} authToken of the user (query param)(required)
+      * @apiSuccess {object} myResponse shows error status, message, http status code, result.
+      * @apiSuccessExample {object} Success-Response:
+      * {
+            "error": false,
+            "message": "deleted activity successfully",
+            "status": 200,
+            "data": {
+                "activityId": "JjOb6ZA9W",
+                "userId": "sXYShmutU",
+                "userName": "avi pawar",
+                "message": "has created new list <b>wewe</b>",
+                "activityType": "createlist",
+                "undoActivity": "deletelist",
+                "listData": {
+                    "title": "wewe",
+                    "id": "j2xLOYKJF",
+                    "owner": "sXYShmutU",
+                    "createdOn": "2019-06-13T03:26:27.000Z",
+                    "itemsList": [],
+                },
+                "itemData": null,
+                "subItemData": null,
+                "updatedOn": "2019-06-13T03:26:28.000Z",
+            }
+        }
+          @apiErrorExample {json} Error-Response:
+            {
+                 "error": true,
+                 "message": "Route not found in the application || Internal serever error",
+                 "status": "500 || 404",
+                 "data" : "null"
+            }
+     */
     app.post(`${baseUrl}/:userId/activities/:activityId/delete`, authMiddleware.isAuthorized, activityController.deleteActivity);
-    
+
 }
 
 module.exports = {
