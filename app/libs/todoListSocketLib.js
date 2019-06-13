@@ -65,7 +65,8 @@ let setServer = (server) => {
                 }
                 eventEmitter.emit('add-to-activity', activityData);
                 socket.emit('count-activities', count);
-                socket.to(`${createData.userId}`).emit('notify-list-operation', createData);
+                socket.join(`${createData.userId}`);
+                socket.to(`${createData.userId}`).broadcast.emit('notify-list-operation', createData);
             }
             socket.emit('update-list', createData.data);
             socket.broadcast.emit('update-list', createData.data);
