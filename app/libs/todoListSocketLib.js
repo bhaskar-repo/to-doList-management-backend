@@ -32,7 +32,6 @@ let setServer = (server) => {
                         }
                         else {
                             let currentUser = decoded.data;
-                            socket.userId = currentUser.userId;
                         }
                     });// end verify token
 
