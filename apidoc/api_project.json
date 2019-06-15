@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Documentation for the To Do List Management Application Management app",
   "title": "To Do List APIs",
-  "url": "http://apidoc.testtodos.in",
+  "url": "http://api.testtodos.in",
   "sampleUrl": false,
   "defaultVersion": "0.0.0",
   "apidoc": "0.3.0",
