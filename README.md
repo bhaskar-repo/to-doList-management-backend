@@ -19,7 +19,7 @@ This instructions will tell you how to clone this to your localhost and run it.
  
  ```
  > git init
- > git remote add origin https://github.com/bhaskar-repo/meeting-planner-backend.git
+ > git remote add origin https://github.com/bhaskar-repo/to-doList-management-backend.git
  > git pull origin master
  > npm install
  ```
@@ -29,12 +29,12 @@ This instructions will tell you how to clone this to your localhost and run it.
  > node index.js
 ```
 ### More About Application
-Meeting Planner	
+TO DO LIST MANAGEMENT SYSTEM
 
 Applications has mainly three modules
  
-  * **USER MODULE** 
-  * **MEETING MODULE**
+  * **USER MODULE**
+  * **TODOLIST MODULE**
   * **SHARED MODULE**
   
   * USER -> it includes sign up,login,requests,activities,friends,find friends functionalities
@@ -43,23 +43,48 @@ Applications has mainly three modules
 			   -> upon login user will be redirected to login page.
 		login  -> user can login through registered email followed authentication mechanism generating jwt.
 				  client side from validation for gmail and password is added.
-		-> upon login user will see his meetings organized by admin in calendar form
-		-> user can only see his meetings he can not make any updates for view there is a seperate view
+		requests -> requests is a section where all the requests from other users will land.
+					user can either cancel request or accept it. once accepted friends will be notified.
+		activities -> user can see the his own activities as well as friends activities 
+					 user can undo activities
+					 
+		Friends -> all the friends of user are listed under this section.
+		           from here user can see friends list,profile,and activities.
+		find friends -> here you will find a button where all the friends are listed to whom you send a request.
 		
- * MEETING -> Admin user is able to add,edit and delete meeting of the user
-		 -> Admin can edit any user's meeting.from users dashboard.
-		 -> Meetings are shown in calendar form with all functionalities added.
+  * TODOLIST -> it has three parts, List,Items,subItems
+			
+		List -> upon login user will see an option to add an empty list, user can delete the list too.
+			 -> here user can edit the list.
+		Item -> on edit of list user can add items to the list and delete item from the list
+			 -> on edit of item user is redirected to edit page here user can edit title,description,duedate and upload file too.
+		subItem -> in edit section of item only user is able to add sub item.
 		
- * SHARED MODULE -> all the common things requred are kept here,
+		->mark done/open functionalities added for both item and subitems if you are adding sub items to items you must mark
+			them complete, then only you can mark main item done.
+		-> user can only edit the item if user has marked that item open 
+		
+		-> Dashboard also you can check the status of to dos if markded done green color will be shown
+		
+		-> i have used font-awesome icons instead of buttons in most of the places.
+		
+		-> on each action client will emit socket event for that particular action.
+		
+  * SHARED MODULE -> all the common things requred are kept here,
 				-> header is kept in this module all the major actions have seperated with nav bar links
 				-> http header is a component when any error the user will be redirected to this page
 				-> hanled error with diffrent page.
 				
- * Exra points -> 
+  * Exra points -> 
+			- >added file upload functionality.
 			- > added icon for each action.
 
 note: i am storing my secretKey in database. need to add an entry for each db connection (secretKey: "") in globalcofig table
 for more details kindly refer to the microsoft world doc attached.
+
+cntrl + z will work on activities page last action will be deleted and reverted back.
+
+i have added only few of events in event docs,it is a very big params
 
 
 ## Built With
@@ -81,4 +106,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 * Thanks for Edwisor to review this application.
-* I would like to thank whoever supported for implenting this back end for meeting planner application.
+* I would like to thank whoever supported for implenting this back end for to do list management backend application.
